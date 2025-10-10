@@ -17,7 +17,7 @@
 
     h1 {
       margin-top: 30px;
-      font-size: 2em;
+      font-size: 1.9em;
       color: #FF0101;
       text-shadow: 0 0 10px #ff4444, 0 0 20px #FF0000;
       letter-spacing: 1px;
@@ -103,6 +103,99 @@
       border-radius: 12px;
       padding: 15px;
       box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+      font-size: 1rem;
+    }
+
+    .sonuc b {
+      color: #FF0000;
+    }
+
+    #uyari {
+      color: #ff4444;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: rgba(255, 0, 0, 1);
+      margin: 15px 0;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>BABA PRO TYT NET HESAPLAMA</h1>
+  <div class="container">
+    <div id="form"></div>
+    <button onclick="hesapla()">Hesapla</button>
+    <div id="uyari"></div>
+    <div class="sonuc" id="sonuc">Henüz hesap yapılmadı.</div>
+  </div>
+
+  <script>
+    const dersler = {
+      "Türkçe": 40, "Tarih": 5, "Coğrafya": 5, "Felsefe": 5, "Din": 5,
+      "Matematik": 40, "Fizik": 7, "Kimya": 7, "Biyoloji": 6
+    };
+
+    const formDiv = document.getElementById("form");
+    for (let ders in dersler) {
+      formDiv.innerHTML += `
+        <div class='ders'>
+          <strong>${ders}</strong><br>
+          Doğru: <input id="d_${ders}" type="number" min="0" max="${dersler[ders]}">
+          Yanlış: <input id="y_${ders}" type="number" min="0" max="${dersler[ders]}">
+        </div>
+      `;
+    }
+
+    function hesapla() {
+      const uyaridiv = document.getElementById("uyari");
+      uyaridiv.innerHTML = ""; // önceki uyarıyı temizle
+
+      let toplamDogru = 0, toplamYanlis = 0, toplamBos = 0, toplamNet = 0;
+      let text = "";
+
+      for (let ders in dersler) {
+        const d = parseFloat(document.getElementById("d_" + ders).value) || 0;
+        const y = parseFloat(document.getElementById("y_" + ders).value) || 0;
+        const t = dersler[ders];
+
+        // Doğru+Yanlış toplamı dersi geçerse uyar
+        if (d + y > t) {
+          uyaridiv.innerHTML = `${ders} dersinde doğru + yanlış toplamı ${t}'yi geçemez. Lütfen geçerli bir değer girin.`;
+          document.getElementById("sonuc").innerHTML = "Henüz hesap yapılmadı.";
+          return; // hesaplamayı durdur
+        }
+
+        const bos = t - (d + y);
+        const net = d - (y / 4);
+
+        toplamDogru += d;
+        toplamYanlis += y;
+        toplamBos += bos;
+        toplamNet += net;
+
+        text += `<b>${ders}</b> → Doğru: ${d}, Yanlış: ${y}, Boş: ${bos}, Net: ${net.toFixed(2)}<br>`;
+      }
+
+      text += `<hr><b>GENEL SONUÇ</b><br>
+      Doğru: ${toplamDogru} | Yanlış: ${toplamYanlis} | Boş: ${toplamBos}<br>
+      Toplam Net: <b>${toplamNet.toFixed(2)}</b>`;
+
+      document.getElementById("sonuc").innerHTML = text;
+    }
+  </script>
+</body>
+</html>      box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
       font-size: 1rem;
     }
 
