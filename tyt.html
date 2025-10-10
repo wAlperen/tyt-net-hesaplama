@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BABA PRO TYT NET HESAPLAMA</title>
+  <style>
+    body {
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkd8nGTROVMWbHWWQkipGVr1XF1xV9Lj3AtdPbs9D9JZ9SuAvNRWjoeWM&s=10");
+      background-repeat: no-repeat;
+      background-position: 75% center;
+      background-size: cover;
+      background-attachment: fixed;
+      color: rgba(255, 255, 255, 1);
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 2em;
+      color: #FF0101;
+      text-shadow: 0 0 10px #ff4444, 0 0 20px #FF0000;
+      letter-spacing: 1px;
+      margin-left: 21%;
+    }
+
+    p {
+      font-size: 1.3rem;
+      color: #5D00FF;
+      margin-bottom: 20px;
+      margin-left: 16%;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      padding: 20px 25px;
+      text-align: center;
+    }
+
+    .ders {
+      background: rgba(255, 255, 255, 0.08);
+      margin: 10px 0;
+      border-radius: 12px;
+      padding: 10px;
+      transition: 0.3s;
+    }
+
+    .ders:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+
+    strong {
+      color: #F2F2F2;
+      font-size: 1.1em;
+    }
+
+    input {
+      width: 70px;
+      padding: 6px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      background: rgba(252, 252, 252, 0.2);
+      color: white;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 30px;
+      background: linear-gradient(45deg, #ff4d4d, #ff0000);
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #FFFFFF, #ff1a1a);
+      transform: scale(1.05);
+    }
+
+    .sonuc {
+      margin-top: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+      font-size: 1rem;
+    }
+
+    .sonuc b {
+      color: #FF0000;
+    }
+
+    #uyari {
+      color: #ff4444;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: rgba(255, 0, 0, 1);
+      margin: 15px 0;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>BABA PRO TYT NET HESAPLAMA</h1>
+  <p>Doğru ve yanlış sayılarını gir, sistem netlerini otomatik hesaplasın.</p>
+
+  <div class="container">
+    <div id="form"></div>
+    <button onclick="hesapla()">Hesapla</button>
+    <div id="uyari"></div>
+    <div class="sonuc" id="sonuc">Henüz hesap yapılmadı.</div>
+  </div>
+
+  <script>
+    const dersler = {
+      "Türkçe": 40, "Tarih": 5, "Coğrafya": 5, "Felsefe": 5, "Din": 5,
+      "Matematik": 40, "Fizik": 7, "Kimya": 7, "Biyoloji": 6
+    };
+
+    const formDiv = document.getElementById("form");
+    for (let ders in dersler) {
+      formDiv.innerHTML += `
+        <div class='ders'>
+          <strong>${ders}</strong><br>
+          Doğru: <input id="d_${ders}" type="number" min="0" max="${dersler[ders]}">
+          Yanlış: <input id="y_${ders}" type="number" min="0" max="${dersler[ders]}">
+        </div>
+      `;
+    }
+
+    function hesapla() {
+      const uyaridiv = document.getElementById("uyari");
+      uyaridiv.innerHTML = ""; // önceki uyarıyı temizle
+
+      let toplamDogru = 0, toplamYanlis = 0, toplamBos = 0, toplamNet = 0;
+      let text = "";
+
+      for (let ders in dersler) {
+        const d = parseFloat(document.getElementById("d_" + ders).value) || 0;
+        const y = parseFloat(document.getElementById("y_" + ders).value) || 0;
+        const t = dersler[ders];
+
+        // Doğru+Yanlış toplamı dersi geçerse uyar
+        if (d + y > t) {
+          uyaridiv.innerHTML = `${ders} dersinde doğru + yanlış toplamı ${t}'yi geçemez. Lütfen geçerli bir değer girin.`;
+          document.getElementById("sonuc").innerHTML = "Henüz hesap yapılmadı.";
+          return; // hesaplamayı durdur
+        }
+
+        const bos = t - (d + y);
+        const net = d - (y / 4);
+
+        toplamDogru += d;
+        toplamYanlis += y;
+        toplamBos += bos;
+        toplamNet += net;
+
+        text += `<b>${ders}</b> → Doğru: ${d}, Yanlış: ${y}, Boş: ${bos}, Net: ${net.toFixed(2)}<br>`;
+      }
+
+      text += `<hr><b>GENEL SONUÇ</b><br>
+      Doğru: ${toplamDogru} | Yanlış: ${toplamYanlis} | Boş: ${toplamBos}<br>
+      Toplam Net: <b>${toplamNet.toFixed(2)}</b>`;
+
+      document.getElementById("sonuc").innerHTML = text;
+    }
+  </script>
+</body>
+</html>
